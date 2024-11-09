@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    libs.guava
+    implementation libs.json
+}
+
+testing {
+    suites {
+        test {
+            useJUnitJupiter('5.10.3')
+        }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main'
+            }
+        }
+    }
+}
+
+application {
+    mainClass = 'org.snowcap.labelme2coco.Main'
+}
