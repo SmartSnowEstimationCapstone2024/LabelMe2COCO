@@ -18,6 +18,7 @@ public class Main {
         if (argv.length != 3) {
             System.err.println("Input arguments did not match expected count of 2.");
             System.out.println("Usage: java -jar labelme2coco.jar {CoCo document} {LabelMe document directory} {Y|N (use full path names in output)}");
+            System.exit(1);
         }
         cocoFile = new File(argv[0]);
         labelMeDir = new File(argv[1]);
