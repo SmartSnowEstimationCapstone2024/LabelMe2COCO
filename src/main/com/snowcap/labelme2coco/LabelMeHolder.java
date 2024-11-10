@@ -38,10 +38,11 @@ public class LabelMeHolder implements Runnable {
     }
 
     public String[][] getSegments() {
-        String[][] outputArr = new String[this.segments.size()][2];
+        String[][] outputArr = new String[this.segments.size()][3];
         for (int i = 0; i < outputArr.length; i++) {
             outputArr[i][0] = this.segments.get(i)[0];
             outputArr[i][1] = this.segments.get(i)[1];
+            outputArr[i][2] = this.segments.get(i)[2];
         }
         return outputArr;
     }
@@ -61,6 +62,24 @@ public class LabelMeHolder implements Runnable {
                 String[] segment = new String[2];
                 segment[0] = jArr.getJSONObject(i).getString("label");
                 segment[1] = jArr.getJSONObject(i).getJSONArray("points").toString();
+                double minX = Double.MAX_VALUE;
+                double minY = minX;
+                double maxX = Double.MIN_VALUE;
+                double maxY = maxX;
+                for (int j = 0; j < jArr.getJSONObject(i).getJSONArray("points").length(); j++) {
+                    JSONArray pointJArr = jArr.getJSONObject(i).getJSONArray("points").getJSONArray(j);
+                    minX = (minX > pointJArr.getDouble(0)) ? pointJArr.getDouble(0) : minX;
+                    minY = (minY > pointJArr.getDouble(1)) ? pointJArr.getDouble(1) : minY;
+                    maxX = (maxX < pointJArr.getDouble(0)) ? pointJArr.getDouble(0) : maxX;
+                    maxY = (maxY < pointJArr.getDouble(1)) ? pointJArr.getDouble(1) : maxY;
+                }
+                JSONArray bboxJArr = new JSONArray(4);
+                bboxJArr.put(0, minX);
+                bboxJArr.put(1, minY);
+                bboxJArr.put(2, maxX);
+                bboxJArr.put(3, maxY);
+                segment[2] = bboxJArr.toString();
+                this.segments.add(segment);
             }
         } catch (FileNotFoundException | JSONException e) {
             System.err.println("Failure in processing LabelMe Json File.");
