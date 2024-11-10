@@ -37,6 +37,10 @@ jar {
     manifest {
         attributes 'Main-Class': 'com.snowcap.labelme2coco.Main'
     }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 application {
